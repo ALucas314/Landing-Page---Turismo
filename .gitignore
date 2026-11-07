@@ -1,0 +1,15 @@
+# Variáveis de ambiente (credenciais) — nunca versionar
+.env
+.env.*
+!.env.example
+
+# Gerado a partir do .env por "npm run config"
+assets/js/env.js
+
+# Node / sistema
+node_modules/
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | FielTour</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                /* Mesma paleta do assets/js/script.js (identidade visual do site) */
+                colors: {
+                    fiel: { light: '#E0F2FE', cyan: '#00A8E8', blue: '#0284C7', dark: '#0C4A6E', deeper: '#082F49' },
+                    whatsapp: { DEFAULT: '#25D366', dark: '#128C7E' }
+                },
+                fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'], script: ['Pacifico', 'cursive'] }
+            } }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos do projeto (os mesmos do site) -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <!-- Configuração pública gerada a partir do .env ("npm run config") -->
+    <script src="assets/js/env.js"></script>
+    <script src="assets/js/supabase-client.js"></script>
+
+    <style>
+        .admin-logo { display: block; height: 56px; width: auto; max-width: 100%; object-fit: contain; }
+        .guard-logo { height: 80px; }
+        .top-logo { height: 40px; }
+        .guard-bg {
+            background-image: linear-gradient(180deg, rgba(8,47,73,.88) 0%, rgba(8,47,73,.78) 50%, rgba(8,47,73,.92) 100%),
+                url('https://commons.wikimedia.org/wiki/Special:FilePath/Ilha_do_Amor,_%C3%81lter_do_Ch%C3%A3o.JPG?width=1920');
+            background-size: cover; background-position: center;
+        }
+        .switch { position: relative; width: 44px; height: 24px; border-radius: 9999px; background: #cbd5e1; transition: background .2s; flex-shrink: 0; }
+        .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 9999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+        .switch[aria-checked="true"] { background: #00A8E8; }
+        .switch[aria-checked="true"]::after { transform: translateX(20px); }
+        .switch:disabled { opacity: .6; cursor: wait; }
+        .toast-enter { animation: toastIn .25s ease-out; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+        .modal-panel { animation: modalIn .2s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-800 selection:bg-fiel-cyan selection:text-white">
+
+    <!-- ===== Verificação de acesso (cobre a página até o servidor confirmar o admin) ===== -->
+    <div id="guard" class="guard-bg fixed inset-0 z-[100] flex flex-col items-center justify-center text-white px-6 text-center">
+        <div class="bg-white rounded-3xl shadow-2xl px-8 py-5 mb-8">
+            <img src="assets/img/Logo.png" alt="FielTour - Agência de Turismo" class="admin-logo guard-logo">
+        </div>
+        <i id="guard-icon" class="fa-solid fa-circle-notch fa-spin text-4xl text-fiel-cyan"></i>
+        <p id="guard-msg" class="mt-5 font-display font-bold text-lg">Verificando acesso...</p>
+        <a id="guard-link" href="login.html" class="hidden mt-6 bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-sm px-6 py-3 rounded-full shadow-lg transition-colors">IR PARA O LOGIN</a>
+    </div>
+
+    <div id="app" class="hidden min-h-screen lg:pl-72">
+
+        <!-- ===== Menu lateral ===== -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-fiel-deeper text-sky-100 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200" aria-label="Menu do painel">
+            <div class="px-5 pt-6 pb-5 border-b border-white/10 flex items-center gap-2">
+                <a href="admin.html" class="bg-white rounded-2xl px-5 py-3 flex justify-center shadow flex-1" aria-label="FielTour - Painel">
+                    <img src="assets/img/Logo.png" alt="FielTour - Agência de Turismo" class="admin-logo">
+                </a>
+                <button type="button" id="sidebar-close" class="lg:hidden text-sky-200 hover:text-white p-2" aria-label="Fechar menu">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 px-4 py-6 space-y-1 text-sm font-semibold">
+                <p class="px-3 pb-2 text-[11px] uppercase tracking-widest text-sky-300/70 font-bold">Gerenciamento</p>
+                <a href="#destinos" class="flex items-center gap-3 px-3 py-3 rounded-xl bg-fiel-cyan text-white shadow" aria-current="page">
+                    <i class="fa-solid fa-map-location-dot w-5 text-center"></i>
+                    <span>Próximos Destinos</span>
+                    <span id="nav-count" class="ml-auto bg-white/25 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                </a>
+                <p class="px-3 pt-6 pb-2 text-[11px] uppercase tracking-widest text-sky-300/70 font-bold">Site</p>
+                <a href="index.html#pacotes" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/10 hover:text-white transition-colors">
+                    <i class="fa-solid fa-arrow-up-right-from-square w-5 text-center"></i>
+                    <span>Ver site público</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-white/10">
+                <div class="flex items-center gap-3 bg-white/5 rounded-2xl p-3">
+                    <div id="admin-avatar" class="w-10 h-10 rounded-full bg-fiel-cyan text-white font-display font-black flex items-center justify-center shrink-0">A</div>
+                    <div class="min-w-0">
+                        <p id="admin-name" class="text-sm font-bold text-white truncate">Administrador</p>
+                        <p id="admin-email" class="text-xs text-sky-200/80 truncate"></p>
+                    </div>
+                </div>
+                <button type="button" class="js-logout mt-3 w-full flex items-center justify-center gap-2 text-sm font-semibold text-sky-100 hover:text-white bg-white/5 hover:bg-red-500/80 rounded-xl py-2.5 transition-colors">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </button>
+            </div>
+        </aside>
+        <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-slate-900/50 hidden lg:hidden"></div>
+
+        <!-- ===== Barra superior ===== -->
+        <header class="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+            <div class="h-16 sm:h-20 px-4 sm:px-6 lg:px-8 flex items-center gap-3">
+                <button type="button" id="sidebar-open" class="lg:hidden text-slate-600 hover:text-fiel-cyan p-2 -ml-2 rounded-lg" aria-label="Abrir menu">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="lg:hidden shrink-0"><img src="assets/img/Logo.png" alt="FielTour" class="admin-logo top-logo"></div>
+                <div class="min-w-0 hidden sm:block lg:block">
+                    <p class="text-[11px] uppercase tracking-widest text-fiel-cyan font-bold">Painel administrativo</p>
+                    <h1 class="font-display font-black text-lg sm:text-xl text-fiel-dark truncate">Próximos Destinos</h1>
+                </div>
+                <div class="ml-auto flex items-center gap-2 sm:gap-3">
+                    <span class="hidden sm:flex items-center gap-2 text-sm text-slate-600 bg-slate-100 rounded-full pl-1.5 pr-4 py-1.5">
+                        <span id="top-avatar" class="w-7 h-7 rounded-full bg-fiel-dark text-white text-xs font-black flex items-center justify-center">A</span>
+                        <span>Olá, <strong id="top-name" class="text-fiel-dark">Admin</strong></span>
+                    </span>
+                    <button type="button" class="js-logout text-slate-500 hover:text-red-600 w-10 h-10 rounded-full hover:bg-red-50 flex items-center justify-center transition-colors" aria-label="Sair" title="Sair">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== Conteúdo ===== -->
+        <main id="destinos" class="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
+
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                <div>
+                    <span class="text-fiel-cyan font-bold text-xs uppercase tracking-widest bg-fiel-light px-3 py-1 rounded-full">Vitrine do site</span>
+                    <h2 class="font-display font-black text-2xl sm:text-3xl text-fiel-dark mt-3">Gerenciar pacotes</h2>
+                    <p class="text-slate-500 text-sm mt-1">Os pacotes publicados aparecem em <strong>Próximos Destinos</strong> na página inicial.</p>
+                </div>
+                <button type="button" id="btn-add" class="shrink-0 bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-sm px-6 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all inline-flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Adicionar destino
+                </button>
+            </div>
+
+            <!-- Indicadores -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3">
+                    <span class="w-11 h-11 rounded-xl bg-fiel-light text-fiel-blue flex items-center justify-center"><i class="fa-solid fa-suitcase-rolling"></i></span>
+                    <div><p class="text-xs text-slate-500 font-semibold">Total</p><p id="st-total" class="font-display font-black text-2xl text-fiel-dark leading-none mt-1">–</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3">
+                    <span class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-globe"></i></span>
+                    <div><p class="text-xs text-slate-500 font-semibold">Publicados</p><p id="st-ativos" class="font-display font-black text-2xl text-fiel-dark leading-none mt-1">–</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3">
+                    <span class="w-11 h-11 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center"><i class="fa-solid fa-eye-slash"></i></span>
+                    <div><p class="text-xs text-slate-500 font-semibold">Ocultos</p><p id="st-inativos" class="font-display font-black text-2xl text-fiel-dark leading-none mt-1">–</p></div>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3">
+                    <span class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-tag"></i></span>
+                    <div><p class="text-xs text-slate-500 font-semibold">Preço oculto</p><p id="st-preco" class="font-display font-black text-2xl text-fiel-dark leading-none mt-1">–</p></div>
+                </div>
+            </div>
+
+            <!-- Busca e filtros -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 sm:p-4 mb-6 flex flex-col md:flex-row gap-3 md:items-center">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input id="search" type="search" placeholder="Buscar por título ou destino..."
+                           class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3 text-sm transition">
+                </div>
+                <div class="flex flex-wrap gap-2" id="filters" role="tablist">
+                    <button type="button" data-filter="todos" class="filter-btn bg-fiel-dark text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-full transition-all">Todos</button>
+                    <button type="button" data-filter="ativos" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full transition-all">Publicados</button>
+                    <button type="button" data-filter="inativos" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full transition-all">Ocultos</button>
+                </div>
+                <button type="button" id="btn-refresh" class="self-start md:self-auto text-slate-500 hover:text-fiel-cyan w-10 h-10 rounded-full hover:bg-fiel-light flex items-center justify-center transition-colors" title="Recarregar" aria-label="Recarregar lista">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+
+            <!-- Lista de pacotes -->
+            <div id="pk-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6" aria-live="polite"></div>
+
+            <div id="pk-empty" class="hidden text-center bg-white rounded-3xl border-2 border-dashed border-slate-200 py-14 px-6">
+                <span class="w-16 h-16 mx-auto rounded-full bg-fiel-light text-fiel-cyan flex items-center justify-center text-2xl"><i class="fa-solid fa-map-location-dot"></i></span>
+                <h3 id="pk-empty-title" class="font-display font-black text-xl text-fiel-dark mt-4">Nenhum destino cadastrado</h3>
+                <p id="pk-empty-text" class="text-slate-500 text-sm mt-1">Clique em “Adicionar destino” para criar o primeiro pacote.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== Modal: cadastro / edição ===== -->
+    <div id="form-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="form-title">
+        <div class="min-h-full flex items-start sm:items-center justify-center p-3 sm:p-6">
+            <form id="pk-form" novalidate class="modal-panel bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-5 sm:px-8 py-5 border-b border-slate-100">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-widest text-fiel-cyan font-bold">Próximos Destinos</p>
+                        <h2 id="form-title" class="font-display font-black text-xl sm:text-2xl text-fiel-dark">Adicionar destino</h2>
+                    </div>
+                    <button type="button" class="js-close-form w-10 h-10 rounded-full hover:bg-slate-100 text-slate-500 flex items-center justify-center" aria-label="Fechar">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="px-5 sm:px-8 py-6 grid md:grid-cols-5 gap-6">
+                    <!-- Imagem -->
+                    <div class="md:col-span-2">
+                        <span class="block text-sm font-bold text-slate-700 mb-1.5">Imagem do destino</span>
+                        <div id="img-box" class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center">
+                            <img id="img-preview" alt="Pré-visualização da imagem" class="hidden absolute inset-0 w-full h-full object-cover">
+                            <div id="img-placeholder" class="text-center text-slate-400 px-4">
+                                <i class="fa-regular fa-image text-4xl"></i>
+                                <p class="text-xs mt-2">JPG, PNG, WEBP ou AVIF<br>até 5 MB</p>
+                            </div>
+                            <span id="img-new-badge" class="hidden absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow">Nova — salve para aplicar</span>
+                        </div>
+                        <input id="f-imagem" type="file" accept="image/jpeg,image/png,image/webp,image/avif" class="sr-only">
+                        <div class="flex gap-2 mt-3">
+                            <label for="f-imagem" id="img-pick" class="flex-1 cursor-pointer text-center bg-fiel-light hover:bg-sky-100 text-fiel-blue font-semibold text-sm py-2.5 rounded-xl transition-colors">
+                                <i class="fa-solid fa-upload"></i> <span id="img-pick-text">Enviar imagem</span>
+                            </label>
+                            <button type="button" id="img-undo" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold px-3 rounded-xl" title="Descartar imagem nova">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                        <p id="err-imagem" class="hidden text-red-600 text-xs mt-1.5"></p>
+                    </div>
+
+                    <!-- Campos -->
+                    <div class="md:col-span-3 space-y-4">
+                        <div>
+                            <label for="f-titulo" class="block text-sm font-bold text-slate-700 mb-1.5">Título <span class="text-red-500">*</span></label>
+                            <input id="f-titulo" type="text" maxlength="150" placeholder="Ex.: Excursão Alter do Chão"
+                                   class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl px-4 py-3 text-sm transition">
+                            <p id="err-titulo" class="hidden text-red-600 text-xs mt-1.5"></p>
+                        </div>
+                        <div>
+                            <label for="f-destino" class="block text-sm font-bold text-slate-700 mb-1.5">Destino <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-fiel-cyan"></i>
+                                <input id="f-destino" type="text" maxlength="150" placeholder="Ex.: Santarém - PA"
+                                       class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-10 pr-4 py-3 text-sm transition">
+                            </div>
+                            <p id="err-destino" class="hidden text-red-600 text-xs mt-1.5"></p>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label for="f-descricao" class="block text-sm font-bold text-slate-700">Descrição <span class="text-slate-400 font-medium">(opcional)</span></label>
+                                <span id="desc-count" class="text-[11px] text-slate-400">0/5000</span>
+                            </div>
+                            <textarea id="f-descricao" rows="4" maxlength="5000" placeholder="Roteiro, o que está incluso, pontos de embarque..."
+                                      class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl px-4 py-3 text-sm transition resize-y"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="f-preco" class="block text-sm font-bold text-slate-700 mb-1.5">Preço <span class="text-slate-400 font-medium">(opcional)</span></label>
+                            <div class="flex gap-2">
+                                <div class="relative flex-1">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-semibold">R$</span>
+                                    <input id="f-preco" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0,00"
+                                           class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3 text-sm transition">
+                                </div>
+                                <button type="button" id="f-mostrar-preco" aria-pressed="true"
+                                        class="shrink-0 w-12 rounded-xl border border-sky-200 bg-fiel-light text-fiel-blue hover:bg-sky-100 flex items-center justify-center transition-colors"
+                                        title="Preço visível no site">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                            <p id="preco-hint" class="text-xs mt-1.5 text-fiel-blue font-semibold"><i class="fa-regular fa-eye"></i> Preço visível para os visitantes</p>
+                            <p id="err-preco" class="hidden text-red-600 text-xs mt-1.5"></p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="f-partida" class="block text-sm font-bold text-slate-700 mb-1.5">Partida</label>
+                                <input id="f-partida" type="date"
+                                       class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl px-3 py-3 text-sm transition">
+                            </div>
+                            <div>
+                                <label for="f-retorno" class="block text-sm font-bold text-slate-700 mb-1.5">Retorno</label>
+                                <input id="f-retorno" type="date"
+                                       class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl px-3 py-3 text-sm transition">
+                            </div>
+                        </div>
+                        <p id="err-datas" class="hidden text-red-600 text-xs -mt-2"></p>
+
+                        <div class="grid grid-cols-2 gap-3 items-end">
+                            <div>
+                                <label for="f-vagas" class="block text-sm font-bold text-slate-700 mb-1.5">Vagas disponíveis</label>
+                                <input id="f-vagas" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex.: 40"
+                                       class="fld w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl px-4 py-3 text-sm transition">
+                            </div>
+                            <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5">
+                                <button type="button" id="f-ativo" role="switch" aria-checked="true" class="switch" aria-label="Publicar no site"></button>
+                                <span id="ativo-label" class="text-sm font-semibold text-slate-700 leading-tight">Publicado no site</span>
+                            </div>
+                        </div>
+                        <p id="err-vagas" class="hidden text-red-600 text-xs -mt-2"></p>
+                    </div>
+                </div>
+
+                <div id="form-alert" class="hidden mx-5 sm:mx-8 mb-4 rounded-xl px-4 py-3 text-sm font-semibold bg-red-50 text-red-700 border border-red-200" role="alert"></div>
+
+                <div class="px-5 sm:px-8 py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                    <button type="button" class="js-close-form px-6 py-3 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors">Cancelar</button>
+                    <button type="submit" id="form-submit" class="px-7 py-3 rounded-full bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-sm shadow-lg transition-all inline-flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait">
+                        <i id="form-submit-icon" class="fa-solid fa-floppy-disk"></i>
+                        <span id="form-submit-text">SALVAR DESTINO</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== Modal: confirmar exclusão ===== -->
+    <div id="confirm-modal" class="fixed inset-0 z-[60] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="modal-panel bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 sm:p-8 text-center">
+            <span class="w-14 h-14 mx-auto rounded-full bg-red-50 text-red-600 flex items-center justify-center text-2xl"><i class="fa-solid fa-trash-can"></i></span>
+            <h2 id="confirm-title" class="font-display font-black text-xl text-fiel-dark mt-4">Excluir destino?</h2>
+            <p class="text-slate-500 text-sm mt-2">O pacote <strong id="confirm-name" class="text-slate-700"></strong> e sua imagem serão removidos permanentemente. Essa ação não pode ser desfeita.</p>
+            <div class="mt-6 flex flex-col-reverse sm:flex-row gap-3">
+                <button type="button" id="confirm-cancel" class="flex-1 px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors">Cancelar</button>
+                <button type="button" id="confirm-ok" class="flex-1 px-5 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-display font-bold text-sm shadow transition-colors inline-flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait">
+                    <i id="confirm-icon" class="fa-solid fa-trash-can"></i> <span id="confirm-text">EXCLUIR</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Notificações ===== -->
+    <div id="toasts" class="fixed bottom-4 right-4 left-4 sm:left-auto z-[70] flex flex-col gap-2 sm:w-96 pointer-events-none" aria-live="assertive"></div>
+
+    <script src="assets/js/admin.js"></script>
+
+    <script>
+    /* Apara as margens transparentes da logo para ela aparecer maior */
+    (function(){
+      document.querySelectorAll('.admin-logo').forEach(function(img){
+      function trim(){
+        try{
+          var w=img.naturalWidth,h=img.naturalHeight; if(!w||!h) return;
+          var c=document.createElement('canvas'); c.width=w; c.height=h;
+          var x=c.getContext('2d'); x.drawImage(img,0,0);
+          var d=x.getImageData(0,0,w,h).data, minX=w,minY=h,maxX=-1,maxY=-1;
+          for(var y=0;y<h;y++){for(var i=0;i<w;i++){
+            var k=(y*w+i)*4, a=d[k+3];
+            if(a>20 && !(d[k]>245&&d[k+1]>245&&d[k+2]>245)){ if(i<minX)minX=i; if(i>maxX)maxX=i; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+          }}
+          if(maxX<0) return;
+          var cw=maxX-minX+1, ch=maxY-minY+1, o=document.createElement('canvas');
+          o.width=cw; o.height=ch; o.getContext('2d').drawImage(c,minX,minY,cw,ch,0,0,cw,ch);
+          img.src=o.toDataURL('image/png');
+        }catch(e){}
+      }
+      if(img.complete) trim(); else img.addEventListener('load',trim,{once:true});
+      });
+    })();
+    </script>
+</body>
+</html>

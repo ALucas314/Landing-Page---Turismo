@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova senha | FielTour</title>
+    <meta name="robots" content="noindex">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: {
+            colors: { fiel: { dark: '#0b4a72', deeper: '#082f49', blue: '#0284c7', cyan: '#0ea5e9', light: '#e0f2fe' } },
+            fontFamily: { display: ['Montserrat', 'sans-serif'], sans: ['Inter', 'sans-serif'] }
+        } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="assets/js/env.js"></script>
+    <script src="assets/js/supabase-client.js"></script>
+    <style>
+        .login-bg {
+            background-image: linear-gradient(180deg, rgba(8,47,73,.78) 0%, rgba(8,47,73,.62) 50%, rgba(8,47,73,.85) 100%),
+                url('https://commons.wikimedia.org/wiki/Special:FilePath/Ilha_do_Amor,_%C3%81lter_do_Ch%C3%A3o.JPG?width=1920');
+            background-size: cover; background-position: center;
+        }
+        .login-logo { height: 70px; width: auto; max-width: 100%; }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-800">
+    <main class="login-bg min-h-screen flex items-center justify-center px-4 py-10">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-9">
+            <div class="flex justify-center mb-6">
+                <a href="index.html" aria-label="FielTour - Início"><img src="assets/img/Logo.png" alt="FielTour - Agência de Turismo" class="login-logo"></a>
+            </div>
+            <div class="text-center mb-7">
+                <h1 class="font-display font-black text-2xl sm:text-3xl text-fiel-dark">Criar nova senha</h1>
+                <p class="text-slate-500 text-sm mt-1">Escolha uma nova senha para sua conta.</p>
+            </div>
+
+            <div id="alert" class="hidden mb-5 rounded-xl px-4 py-3 text-sm font-semibold" role="alert"></div>
+
+            <form id="reset-form" novalidate class="space-y-5">
+                <div>
+                    <label for="new-password" class="block text-sm font-bold text-slate-700 mb-1.5">Nova senha</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input id="new-password" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres"
+                               class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3.5 text-sm transition">
+                    </div>
+                </div>
+                <div>
+                    <label for="confirm-password" class="block text-sm font-bold text-slate-700 mb-1.5">Confirmar senha</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Repita a senha"
+                               class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3.5 text-sm transition">
+                    </div>
+                </div>
+                <button type="submit" id="btn" class="w-full bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-base py-4 rounded-full shadow-lg transition-all">SALVAR NOVA SENHA</button>
+            </form>
+
+            <a href="login.html" class="block text-center text-sm font-semibold text-slate-500 hover:text-fiel-cyan mt-6 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> Voltar ao login
+            </a>
+        </div>
+    </main>
+
+    <script>
+    (function () {
+        /* Credenciais vêm do .env via assets/js/env.js (somente chave pública) */
+        var FT = window.FielTour || { client: null };
+        var sb = FT.client;
+
+        var box = document.getElementById('alert');
+        function show(type, msg) {
+            box.className = 'mb-5 rounded-xl px-4 py-3 text-sm font-semibold ' +
+                (type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-sky-50 text-sky-800 border border-sky-200');
+            box.textContent = msg;
+        }
+        if (!sb) { show('error', FT.NOT_CONFIGURED_MSG || 'Supabase ainda não configurado.'); }
+
+        var ready = false;
+        if (sb) {
+            // O link do e-mail cria uma sessão temporária de recuperação
+            sb.auth.onAuthStateChange(function (event) { if (event === 'PASSWORD_RECOVERY') ready = true; });
+            sb.auth.getSession().then(function (r) { if (r.data && r.data.session) ready = true; });
+        }
+
+        document.getElementById('reset-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var p1 = document.getElementById('new-password').value;
+            var p2 = document.getElementById('confirm-password').value;
+            if (!sb) return;
+            if (p1.length < 6) { show('error', 'A senha deve ter pelo menos 6 caracteres.'); return; }
+            if (p1 !== p2) { show('error', 'As senhas não são iguais.'); return; }
+            if (!ready) { show('error', 'Link inválido ou expirado. Peça um novo em "Esqueci minha senha".'); return; }
+            var btn = document.getElementById('btn');
+            btn.disabled = true; btn.textContent = 'SALVANDO...';
+            sb.auth.updateUser({ password: p1 }).then(function (r) {
+                btn.disabled = false; btn.textContent = 'SALVAR NOVA SENHA';
+                if (r.error) { show('error', 'Não foi possível salvar a nova senha. Peça um novo link e tente de novo.'); return; }
+                show('info', 'Senha alterada com sucesso! Redirecionando para o login...');
+                sb.auth.signOut().then(function () { setTimeout(function () { window.location.href = 'login.html'; }, 1800); });
+            });
+        });
+    })();
+    </script>
+
+    <script>
+    /* Apara as margens transparentes da logo para ela aparecer maior */
+    (function(){
+      var img=document.querySelector('.login-logo'); if(!img) return;
+      function trim(){
+        try{
+          var w=img.naturalWidth,h=img.naturalHeight; if(!w||!h) return;
+          var c=document.createElement('canvas'); c.width=w; c.height=h;
+          var x=c.getContext('2d'); x.drawImage(img,0,0);
+          var d=x.getImageData(0,0,w,h).data, minX=w,minY=h,maxX=-1,maxY=-1;
+          for(var y=0;y<h;y++){for(var i=0;i<w;i++){
+            var k=(y*w+i)*4, a=d[k+3];
+            if(a>20 && !(d[k]>245&&d[k+1]>245&&d[k+2]>245)){ if(i<minX)minX=i; if(i>maxX)maxX=i; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+          }}
+          if(maxX<0) return;
+          var cw=maxX-minX+1, ch=maxY-minY+1, o=document.createElement('canvas');
+          o.width=cw; o.height=ch; o.getContext('2d').drawImage(c,minX,minY,cw,ch,0,0,cw,ch);
+          img.src=o.toDataURL('image/png');
+        }catch(e){}
+      }
+      if(img.complete) trim(); else img.addEventListener('load',trim,{once:true});
+    })();
+    </script>
+</body>
+</html>

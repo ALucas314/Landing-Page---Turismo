@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FielTour | Agência de Turismo em Belém - PA</title>
+    <meta name="description" content="Explorando o mundo juntos! Excursões regionais, nacionais, internacionais, congressos e jogos saindo de Belém - PA.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos do projeto -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Logo maior (a imagem é aparada automaticamente por script) */
+        .logo-link { align-items: center !important; height: auto; }
+        .site-logo { height: 52px !important; width: auto !important; max-height: none !important; }
+        @media (min-width: 640px) { .site-logo { height: 64px !important; } }
+        /* Fundo do hero: Ilha do Amor, Alter do Chão (Pará) */
+        .hero-bg {
+            background-image: linear-gradient(180deg, rgba(8,47,73,.60) 0%, rgba(8,47,73,.45) 50%, rgba(8,47,73,.70) 100%),
+                url('https://commons.wikimedia.org/wiki/Special:FilePath/Ilha_do_Amor,_%C3%81lter_do_Ch%C3%A3o.JPG?width=1920') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+        }
+    </style>
+
+    <!-- Scripts do projeto (config do Tailwind + interações) -->
+    <script src="assets/js/script.js"></script>
+
+
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-fiel-cyan selection:text-white">
+
+    <!-- Top Bar Informativa -->
+    <div class="bg-fiel-deeper text-sky-100 text-xs py-2 px-4 border-b border-sky-900/50">
+        <div class="max-w-7xl mx-auto flex flex-col items-center gap-1.5 text-center sm:flex-row sm:flex-wrap sm:justify-between sm:gap-2 sm:text-left">
+            <div class="flex items-center justify-center space-x-4">
+                <span class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-fiel-cyan"></i>
+                    Av. Dalva - Marambaia, Belém - PA
+                </span>
+                <span class="hidden sm:flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-fiel-cyan"></i>
+                    Agência Credenciada CADASTUR
+                </span>
+            </div>
+            <div class="flex items-center justify-center space-x-4 sm:ml-auto">
+                <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="hover:text-fiel-cyan transition-colors flex items-center gap-1">
+                    <i class="fa-brands fa-instagram"></i> @fieltour_
+                </a>
+                <a href="https://wa.me/5591982029843" target="_blank" rel="noopener noreferrer" class="hover:text-whatsapp transition-colors flex items-center gap-1 font-medium">
+                    <i class="fa-brands fa-whatsapp text-whatsapp"></i> (91) 98202-9843
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navbar Fixo -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 sm:h-24">
+                
+                <!-- Logo FielTour -->
+                <a href="#inicio" class="logo-link flex items-center gap-3 group focus:outline-none" aria-label="FielTour - Início">
+                    <img src="assets/img/Logo.png" alt="FielTour - Agência de Turismo" class="site-logo">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-7 text-sm font-semibold text-slate-600">
+                    <a href="#inicio" class="hover:text-fiel-cyan transition-colors">Início</a>
+                    <a href="#categorias" class="hover:text-fiel-cyan transition-colors">Categorias</a>
+                    <a href="#pacotes" class="hover:text-fiel-cyan transition-colors">Próximos Destinos</a>
+                    <a href="#momentos" class="hover:text-fiel-cyan transition-colors">Momentos</a>
+                    <a href="#sobre" class="hover:text-fiel-cyan transition-colors">Sobre Nós</a>
+                    <a href="#contato" class="hover:text-fiel-cyan transition-colors">Contato</a>
+                </nav>
+
+                <!-- CTA Button Desktop -->
+                <div class="hidden md:flex items-center">
+                    <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20FielTour%20e%20gostaria%20de%20conhecer%20os%20pacotes%20de%20viagem." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="bg-fiel-cyan hover:bg-fiel-blue text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Falar com Consultor</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" aria-label="Abrir Menu" class="text-slate-700 hover:text-fiel-cyan p-2 rounded-lg focus:outline-none">
+                        <i id="menu-icon" class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-xl">
+            <a href="#inicio" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan border-b border-slate-100">Início</a>
+            <a href="#categorias" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan border-b border-slate-100">Nossas Categorias</a>
+            <a href="#pacotes" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan border-b border-slate-100">Próximos Destinos</a>
+            <a href="#momentos" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan border-b border-slate-100">Momentos FielTour</a>
+            <a href="#sobre" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan border-b border-slate-100">Sobre a Agência</a>
+            <a href="#contato" class="mobile-link block py-2 text-base font-semibold text-slate-700 hover:text-fiel-cyan">Contato & Localização</a>
+            <div class="pt-2">
+                <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20FielTour%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." 
+                   target="_blank" rel="noopener noreferrer"
+                   class="w-full bg-whatsapp hover:bg-whatsapp-dark text-white font-bold py-3 px-4 rounded-xl shadow flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    Atendimento via WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section id="inicio" class="hero-bg relative min-h-[82vh] flex items-center justify-center text-center text-white px-4 py-20 overflow-hidden">
+        <div class="max-w-4xl mx-auto z-10 space-y-6">
+            
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide uppercase text-sky-100 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-whatsapp animate-ping"></span>
+                Saídas de Belém - PA • Excursões & Experiências
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-tight drop-shadow-md">
+                EXPLORANDO O <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-200 to-white">MUNDO JUNTOS</span> 🌎
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-base sm:text-xl text-sky-100/95 max-w-2xl mx-auto font-normal leading-relaxed drop-shadow">
+                Excursões regionais, nacionais, internacionais, congressos e jogos com toda a segurança, alegria e conforto que você merece. Viva experiências únicas conosco! 🫶🏽
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Quero%20falar%20com%20um%20consultor%20da%20FielTour%20sobre%20as%20pr%C3%B3ximas%20viagens!" 
+                   target="_blank" rel="noopener noreferrer"
+                   class="w-full sm:w-auto bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-base sm:text-lg px-8 py-4 rounded-full shadow-xl hover:shadow-fiel-cyan/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <span>FALAR COM UM CONSULTOR</span>
+                    <i class="fa-brands fa-whatsapp text-2xl"></i>
+                </a>
+                <a href="#pacotes" 
+                   class="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-display font-bold text-base sm:text-lg px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2">
+                    <span>VER PRÓXIMOS DESTINOS</span>
+                    <i class="fa-solid fa-arrow-down text-sm"></i>
+                </a>
+            </div>
+
+            <!-- Quick Trust Indicators -->
+            <div class="pt-8 grid grid-cols-3 gap-4 max-w-lg mx-auto border-t border-white/15 text-center">
+                <div>
+                    <span class="block font-display font-extrabold text-xl sm:text-2xl text-sky-300">+2.500</span>
+                    <span class="text-xs text-sky-100/80">Registros & Posts</span>
+                </div>
+                <div>
+                    <span class="block font-display font-extrabold text-xl sm:text-2xl text-sky-300">+5.500</span>
+                    <span class="text-xs text-sky-100/80">Viajantes & Seguidores</span>
+                </div>
+                <div>
+                    <span class="block font-display font-extrabold text-xl sm:text-2xl text-sky-300">5 Estrelas</span>
+                    <span class="text-xs text-sky-100/80">Aprovação Total</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wave Divider Bottom -->
+        <div class="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
+            <svg class="relative block w-full h-10 sm:h-16 text-slate-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 2. SEÇÃO NOSSAS CATEGORIAS -->
+    <section id="categorias" class="py-16 sm:py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-fiel-cyan font-bold text-xs uppercase tracking-widest bg-fiel-light px-3 py-1 rounded-full">Nossos Serviços</span>
+            <h2 class="font-display font-black text-2xl sm:text-4xl text-fiel-dark mt-3">NOSSAS CATEGORIAS</h2>
+            <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                Seja para um bate-volta no fim de semana ou para a viagem internacional dos seus sonhos, a FielTour cuida de cada detalhe.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+            <!-- Categoria 1 -->
+            <div data-category-filter="regional" class="cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-fiel-cyan card-hover text-center group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <h3 class="font-display font-bold text-base sm:text-lg text-fiel-dark">Regionais</h3>
+                <p class="text-xs text-slate-500 mt-1">Ilha do Combu, Marajó, Mosqueiro e belezas do Pará.</p>
+            </div>
+
+            <!-- Categoria 2 -->
+            <div data-category-filter="nacional" class="cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-fiel-cyan card-hover text-center group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-50 text-fiel-cyan flex items-center justify-center text-3xl mb-4 group-hover:bg-fiel-cyan group-hover:text-white transition-colors shadow-inner">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                </div>
+                <h3 class="font-display font-bold text-base sm:text-lg text-fiel-dark">Nacionais</h3>
+                <p class="text-xs text-slate-500 mt-1">Lençóis Maranhenses, Carolina, Ceará, Sul e Sudeste.</p>
+            </div>
+
+            <!-- Categoria 3 -->
+            <div data-category-filter="internacional" class="cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-fiel-cyan card-hover text-center group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-3xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <h3 class="font-display font-bold text-base sm:text-lg text-fiel-dark">Internacionais</h3>
+                <p class="text-xs text-slate-500 mt-1">Roteiros completos pelo mundo com suporte total.</p>
+            </div>
+
+            <!-- Categoria 4 -->
+            <div data-category-filter="eventos" class="cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-fiel-cyan card-hover text-center group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-3xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                </div>
+                <h3 class="font-display font-bold text-base sm:text-lg text-fiel-dark">Congressos</h3>
+                <p class="text-xs text-slate-500 mt-1">Logística, passagens e hospedagem para eventos.</p>
+            </div>
+
+            <!-- Categoria 5 -->
+            <div data-category-filter="eventos" class="cursor-pointer col-span-2 sm:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-fiel-cyan card-hover text-center group">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-3xl mb-4 group-hover:bg-rose-600 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fa-solid fa-futbol"></i>
+                </div>
+                <h3 class="font-display font-bold text-base sm:text-lg text-fiel-dark">Jogos & Torcidas</h3>
+                <p class="text-xs text-slate-500 mt-1">Caravanas seguras para grandes jogos e campeonatos.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SEÇÃO PRÓXIMOS DESTINOS (VITRINE DE PACOTES) -->
+    <section id="pacotes" class="py-16 bg-white border-y border-slate-100 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-fiel-cyan font-bold text-xs uppercase tracking-widest bg-fiel-light px-3 py-1 rounded-full">Embarque Conosco</span>
+                    <h2 class="font-display font-black text-2xl sm:text-4xl text-fiel-dark mt-3">PRÓXIMOS DESTINOS</h2>
+                    <p class="text-slate-600 mt-1 text-sm sm:text-base">Confira nossa programação oficial e garanta sua vaga com condições facilitadas.</p>
+                </div>
+
+
+            </div>
+
+            <!-- Cards gerados a partir do Supabase (view public.pacotes_publicos) — ver assets/js/destinos.js -->
+            <div id="dest-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8" aria-live="polite" aria-busy="true"></div>
+            <p id="dest-empty" class="hidden text-center text-slate-500 py-12">Novos roteiros em breve. Fale com um consultor!</p>
+
+            <div class="mt-10 text-center">
+                <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Vi%20os%20pr%C3%B3ximos%20destinos%20no%20site%20da%20FielTour%20e%20quero%20conhecer%20os%20roteiros!"
+                   target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-3 bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-sm sm:text-base px-7 py-3.5 rounded-full shadow-lg transition-colors">
+                    <span>QUERO CONHECER O PARÁ</span>
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                </a>
+            </div>
+
+            <!-- Container legado do script (oculto) -->
+            <div id="packages-grid" class="hidden"></div>
+
+            <!-- Banner Chamada Grupo VIP WhatsApp -->
+            <div class="mt-14 bg-gradient-to-r from-fiel-dark via-fiel-blue to-fiel-cyan rounded-3xl p-6 sm:p-10 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center lg:text-left max-w-2xl">
+                    <span class="bg-white/20 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">Comunidade VIP FielTour</span>
+                    <h3 class="font-display font-black text-2xl sm:text-3xl">Quer receber promoções e vagas remanescentes em primeira mão?</h3>
+                    <p class="text-sky-100 text-sm sm:text-base">Entre no nosso grupo oficial do WhatsApp e fique por dentro de todos os lançamentos para 2026 e 2027!</p>
+                </div>
+                <div class="shrink-0">
+                    <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Gostaria%20do%20link%20para%20entrar%20no%20Grupo%20VIP%20da%20FielTour%20no%20WhatsApp!" 
+                       target="_blank" rel="noopener noreferrer"
+                       class="bg-whatsapp hover:bg-whatsapp-dark text-white font-display font-bold text-sm sm:text-base px-7 py-4 rounded-full shadow-lg transition-transform transform hover:scale-105 inline-flex items-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                        <span>ENTRAR NO GRUPO DE OFERTAS</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SEÇÃO MOMENTOS FIELTOUR (DESTAQUES DO INSTAGRAM & PROVA SOCIAL) -->
+    <section id="momentos" class="py-16 sm:py-20 px-4 max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-fiel-cyan font-bold text-xs uppercase tracking-widest bg-fiel-light px-3 py-1 rounded-full">@fieltour_ no Instagram</span>
+            <h2 class="font-display font-black text-2xl sm:text-4xl text-fiel-dark mt-3">MOMENTOS FIELTOUR</h2>
+            <p class="text-slate-600 mt-2 text-sm sm:text-base">
+                Quem viaja uma vez com a FielTour, vira parte da nossa família! Confira os destaques das nossas últimas excursões.
+            </p>
+        </div>
+
+        <!-- Destaques estilo Stories do Instagram -->
+        <div class="flex items-center justify-start sm:justify-center gap-6 overflow-x-auto pb-4 mb-12 no-scrollbar">
+            <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group shrink-0">
+                <div class="instagram-ring rounded-full p-1">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=200&q=80" alt="Lençóis Outubro" class="w-20 h-20 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform">
+                </div>
+                <span class="text-xs font-semibold text-slate-700 mt-2">Lençóis Out...</span>
+            </a>
+
+            <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group shrink-0">
+                <div class="instagram-ring rounded-full p-1">
+                    <img src="https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=200&q=80" alt="Rota Set 2026" class="w-20 h-20 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform">
+                </div>
+                <span class="text-xs font-semibold text-slate-700 mt-2">Rota set 2026</span>
+            </a>
+
+            <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group shrink-0">
+                <div class="instagram-ring rounded-full p-1">
+                    <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=200&q=80" alt="Combu Vale" class="w-20 h-20 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform">
+                </div>
+                <span class="text-xs font-semibold text-slate-700 mt-2">Combu vale</span>
+            </a>
+
+            <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group shrink-0">
+                <div class="instagram-ring rounded-full p-1">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=200&q=80" alt="Fortaleza" class="w-20 h-20 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform">
+                </div>
+                <span class="text-xs font-semibold text-slate-700 mt-2">Fortaleza</span>
+            </a>
+
+            <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group shrink-0">
+                <div class="instagram-ring rounded-full p-1">
+                    <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=200&q=80" alt="Carolina MA" class="w-20 h-20 rounded-full object-cover border-2 border-white group-hover:scale-105 transition-transform">
+                </div>
+                <span class="text-xs font-semibold text-slate-700 mt-2">Carolina-MA</span>
+            </a>
+        </div>
+
+        <!-- Depoimentos de Clientes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm italic">
+                        "A viagem para os Lençóis Maranhenses por Santo Amaro foi inesquecível! Organização impecável desde a saída de Belém, guia super atenciosa e clima maravilhoso no grupo."
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-50">
+                    <div class="w-10 h-10 rounded-full bg-fiel-light text-fiel-blue font-bold flex items-center justify-center">MC</div>
+                    <div>
+                        <h4 class="font-bold text-sm text-fiel-dark">Maria Clara Souza</h4>
+                        <span class="text-xs text-slate-400">Excursão Lençóis Maranhenses</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm italic">
+                        "Conhecer o Poço Azul e Pedra Caída em Carolina com a FielTour foi um sonho realizado. Transporte super confortável e tudo cumprido conforme o combinado. Deus é fiel!"
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-50">
+                    <div class="w-10 h-10 rounded-full bg-fiel-light text-fiel-blue font-bold flex items-center justify-center">RS</div>
+                    <div>
+                        <h4 class="font-bold text-sm text-fiel-dark">Roberto & Família</h4>
+                        <span class="text-xs text-slate-400">Excursão Encantos de Carolina</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 text-sm mb-3">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 text-sm italic">
+                        "Fomos para Jericoacoara e Fortaleza com a equipe da Oda Fulco e já estamos planejando a próxima! Segurança, pontualidade e uma energia contagiante do início ao fim."
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-50">
+                    <div class="w-10 h-10 rounded-full bg-fiel-light text-fiel-blue font-bold flex items-center justify-center">AP</div>
+                    <div>
+                        <h4 class="font-bold text-sm text-fiel-dark">Ana Paula Martins</h4>
+                        <span class="text-xs text-slate-400">Excursão Praias do Ceará</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SEÇÃO SOBRE A AGÊNCIA -->
+    <section id="sobre" class="py-16 bg-fiel-light/60 border-t border-sky-100 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-5">
+                <span class="text-fiel-blue font-bold text-xs uppercase tracking-widest bg-white px-3 py-1 rounded-full shadow-sm">Quem Somos</span>
+                <h2 class="font-display font-black text-2xl sm:text-4xl text-fiel-dark leading-tight">
+                    A sua melhor viagem começa aqui na <span class="text-fiel-cyan">FielTour!</span>
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Sediada no coração da Marambaia, em Belém do Pará, a <strong>FielTour</strong> nasceu com o propósito de aproximar pessoas de seus destinos dos sonhos com segurança, planejamento e muito carinho em cada roteiro.
+                </p>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Somos uma agência e guia de turismo devidamente credenciada no <strong>CADASTUR</strong>, atuando com excelência em excursões rodoviárias e aéreas, passeios regionais, caravanas para congressos e jogos esportivos.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-fiel-cyan text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-sm text-fiel-dark">Credenciamento Oficial</h4>
+                            <p class="text-xs text-slate-500">Agência e Guia cadastrados no Ministério do Turismo (CADASTUR).</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm flex items-start gap-3">
+                        <i class="fa-solid fa-bus text-fiel-cyan text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-sm text-fiel-dark">Frota e Hospedagem</h4>
+                            <p class="text-xs text-slate-500">Parceiros selecionados para garantir conforto em todo o trajeto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="grid grid-cols-2 gap-4">
+                    <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=600&q=80" alt="Viagem FielTour" class="rounded-2xl shadow-lg w-full h-64 object-cover">
+                    <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=600&q=80" alt="Aventura em Grupo" class="rounded-2xl shadow-lg w-full h-64 object-cover mt-8">
+                </div>
+                <!-- Floating Card -->
+                <div class="bg-white p-4 rounded-2xl shadow-xl border border-slate-100 max-w-xs mx-auto -mt-12 relative z-10 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full logo-gradient text-white flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold text-sm text-fiel-dark">"A sua melhor viagem é aqui! Deus é fiel 🤍"</p>
+                        <span class="text-xs text-slate-500">Equipe FielTour • Belém/PA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. RODAPÉ (FOOTER) E CONTATO COMPLETO -->
+    <footer id="contato" class="bg-fiel-deeper text-white pt-16 pb-10 border-t-4 border-fiel-cyan">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-sky-900">
+                
+                <!-- Coluna 1: Identidade -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full logo-gradient flex flex-col items-center justify-center text-white border-2 border-white">
+                            <span class="font-display font-extrabold text-xs">FielTour</span>
+                            <div class="flex gap-0.5 text-[5px] text-yellow-300">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-display font-black text-xl text-white block leading-none">Fiel<span class="text-fiel-cyan">Tour</span></span>
+                            <span class="text-xs text-sky-300">Explorando o mundo juntos 🌎</span>
+                        </div>
+                    </div>
+                    <p class="text-sky-200/80 text-sm leading-relaxed">
+                        Excursões Regionais, Nacionais, Internacionais, Congressos e Jogos. Viva experiências únicas conosco!
+                    </p>
+                    <div class="flex items-center space-x-3 pt-2">
+                        <a href="https://www.instagram.com/fieltour_" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-10 h-10 rounded-full bg-sky-900/60 hover:bg-fiel-cyan flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-instagram text-lg"></i>
+                        </a>
+                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-10 h-10 rounded-full bg-sky-900/60 hover:bg-fiel-cyan flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="https://wa.me/5591982029843" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="w-10 h-10 rounded-full bg-sky-900/60 hover:bg-whatsapp flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna 2: Links Rápidos -->
+                <div>
+                    <h3 class="font-display font-bold text-base text-white uppercase tracking-wider mb-4">Navegação</h3>
+                    <ul class="space-y-2.5 text-sm text-sky-200/80">
+                        <li><a href="#inicio" class="hover:text-fiel-cyan transition-colors">Início</a></li>
+                        <li><a href="#categorias" class="hover:text-fiel-cyan transition-colors">Nossas Categorias</a></li>
+                        <li><a href="#pacotes" class="hover:text-fiel-cyan transition-colors">Próximos Destinos</a></li>
+                        <li><a href="#momentos" class="hover:text-fiel-cyan transition-colors">Momentos & Destaques</a></li>
+                        <li><a href="#sobre" class="hover:text-fiel-cyan transition-colors">Sobre a FielTour</a></li>
+                    </ul>
+                </div>
+
+                <!-- Coluna 3: Redes & Perfis Oficiais -->
+                <div>
+                    <h3 class="font-display font-bold text-base text-white uppercase tracking-wider mb-4">Canais Oficiais</h3>
+                    <ul class="space-y-3 text-sm text-sky-200/80">
+                        <li class="flex items-center gap-2">
+                            <i class="fa-brands fa-instagram text-fiel-cyan w-5"></i>
+                            <span>Instagram: <strong>@fieltour_</strong></span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-brands fa-threads text-fiel-cyan w-5"></i>
+                            <span>Threads: <strong>@fieltour_</strong></span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-brands fa-facebook text-fiel-cyan w-5"></i>
+                            <span>Facebook: <strong>Fiel Tour / Oda Fulco</strong></span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-fiel-cyan w-5"></i>
+                            <span>contato@fieltour.com.br</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Coluna 4: Endereço e Atendimento -->
+                <div>
+                    <h3 class="font-display font-bold text-base text-white uppercase tracking-wider mb-4">Central de Atendimento</h3>
+                    <div class="space-y-3 text-sm text-sky-200/90">
+                        <p class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-location-dot text-fiel-cyan mt-1"></i>
+                            <span><strong>Home Office:</strong> Av. Dalva - Marambaia, Belém - PA, Brasil.<br><em class="text-xs text-sky-300/80">(Atendimento presencial somente com agendamento)</em></span>
+                        </p>
+                        <p class="flex items-center gap-2.5">
+                            <i class="fa-brands fa-whatsapp text-whatsapp text-lg"></i>
+                            <a href="https://wa.me/5591982029843" target="_blank" rel="noopener noreferrer" class="font-bold text-white hover:text-whatsapp transition-colors">
+                                (91) 98202-9843
+                            </a>
+                        </p>
+                        <div class="pt-2">
+                            <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20um%20atendimento%20com%20a%20FielTour." 
+                               target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 bg-fiel-cyan hover:bg-fiel-blue text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors">
+                                <i class="fa-regular fa-calendar-check"></i>
+                                Solicitar Orçamento / Agendar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-sky-300/60 gap-4">
+                <p>© 2026 FielTour Agência de Turismo. Todos os direitos reservados.</p>
+                <p>Belém - Pará - Brasil • Credenciada CADASTUR</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+    <a href="https://wa.me/5591982029843?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20FielTour%20e%20quero%20saber%20mais%20sobre%20as%20viagens!" 
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Conversar no WhatsApp"
+       class="fixed bottom-6 right-6 z-50 bg-whatsapp hover:bg-whatsapp-dark text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center whatsapp-pulse transition-transform hover:scale-110">
+        <i class="fa-brands fa-whatsapp text-3xl sm:text-4xl"></i>
+    </a>
+
+    <!-- MODAL DETALHES DO ROTEIRO -->
+    <div id="package-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-fadeIn my-8">
+            <div class="relative h-56">
+                <img id="modal-img" src="" alt="Destino" class="w-full h-full object-cover">
+                <button type="button" aria-label="Fechar janela" class="js-close-modal absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+                <div id="modal-badge" class="absolute bottom-3 left-4 bg-fiel-cyan text-white text-xs font-bold uppercase px-3 py-1 rounded-full shadow"></div>
+            </div>
+            <div class="p-6 space-y-4">
+                <h3 id="modal-title" class="font-display font-black text-2xl text-fiel-dark"></h3>
+                
+                <div class="flex flex-wrap gap-3 text-xs font-semibold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-regular fa-calendar text-fiel-cyan"></i>
+                        <span id="modal-date"></span>
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-location-dot text-fiel-cyan"></i>
+                        <span id="modal-location"></span>
+                    </span>
+                </div>
+
+                <p id="modal-desc" class="text-sm text-slate-600 leading-relaxed"></p>
+
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-2">O que está incluso / Destaques:</h4>
+                    <ul id="modal-highlights" class="space-y-1.5 text-sm text-slate-700"></ul>
+                </div>
+
+                <div class="pt-4 flex flex-col sm:flex-row gap-3">
+                    <a id="modal-whatsapp-link" href="#" target="_blank" rel="noopener noreferrer"
+                       class="flex-1 bg-whatsapp hover:bg-whatsapp-dark text-white font-display font-bold text-sm py-3.5 px-5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>RESERVAR / VER ROTEIRO COMPLETO</span>
+                    </a>
+                    <button type="button" class="js-close-modal py-3.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+/* Apara as margens transparentes da logo para ela aparecer maior no cabeçalho */
+(function(){
+  var img=document.querySelector('.site-logo'); if(!img) return;
+  function trim(){
+    try{
+      var w=img.naturalWidth,h=img.naturalHeight; if(!w||!h) return;
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      var x=c.getContext('2d'); x.drawImage(img,0,0);
+      var d=x.getImageData(0,0,w,h).data, minX=w,minY=h,maxX=-1,maxY=-1;
+      for(var y=0;y<h;y++){for(var i=0;i<w;i++){
+        var a=d[(y*w+i)*4+3], r=d[(y*w+i)*4], g=d[(y*w+i)*4+1], b=d[(y*w+i)*4+2];
+        if(a>20 && !(r>245&&g>245&&b>245)){ if(i<minX)minX=i; if(i>maxX)maxX=i; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+      }}
+      if(maxX<0) return;
+      var cw=maxX-minX+1, ch=maxY-minY+1, o=document.createElement('canvas');
+      o.width=cw; o.height=ch; o.getContext('2d').drawImage(c,minX,minY,cw,ch,0,0,cw,ch);
+      img.src=o.toDataURL('image/png');
+    }catch(e){}
+  }
+  if(img.complete) trim(); else img.addEventListener('load',trim,{once:true});
+})();
+</script>
+<!-- Próximos Destinos: dados reais do Supabase (somente leitura pública, sem login) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="assets/js/env.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/destinos.js"></script>
+</body>
+</html>

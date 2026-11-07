@@ -1,0 +1,17 @@
+{
+  "name": "fieltour",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site da FielTour com painel administrativo integrado ao Supabase",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "config": "node scripts/build-config.mjs",
+    "build": "node scripts/build-config.mjs",
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "criar-admin": "node scripts/criar-admin.mjs"
+  }
+}

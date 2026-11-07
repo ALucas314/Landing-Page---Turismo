@@ -1,0 +1,462 @@
+/* ==========================================================================
+   FielTour - Estilos customizados
+   (utilitários base via Tailwind CDN; aqui ficam animações, layouts e
+   responsividade específicos do projeto)
+   ========================================================================== */
+
+/* ---------- Base ---------- */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden; /* evita rolagem horizontal indesejada */
+}
+
+/* ---------- Hero ---------- */
+.hero-bg {
+    background-image:
+        linear-gradient(to bottom, rgba(8, 47, 73, 0.65), rgba(12, 74, 110, 0.85)),
+        url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+    .hero-bg {
+        background-attachment: scroll;
+    }
+}
+
+/* ---------- Identidade visual ---------- */
+.logo-gradient {
+    background: radial-gradient(circle at 30% 30%, #00B4D8, #0077B6, #03045E);
+}
+
+.instagram-ring {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    padding: 3px;
+}
+
+/* ---------- Logo do cabeçalho (imagem original) ---------- */
+.site-logo {
+    display: block;
+    height: 48px;      /* altura fixa, largura automática = mantém proporção */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-link:hover .site-logo,
+.logo-link:focus-visible .site-logo {
+    transform: scale(1.05);
+}
+
+@media (min-width: 640px) {
+    .site-logo {
+        height: 56px;
+    }
+}
+
+/* ---------- Animações ---------- */
+@keyframes pulse-ring {
+    0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70%  { transform: scale(1);    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.whatsapp-pulse {
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+    animation: fade-in 0.3s ease-out;
+}
+
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-6px);
+}
+
+/* Stories do Instagram: esconder barra de rolagem */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* ==========================================================================
+   Seção de pacotes: grade responsiva
+   Mobile: 2 colunas | Tablet: 2 colunas maiores | Desktop: 3 colunas
+   ========================================================================== */
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* minmax(0,…) impede estouro */
+    gap: 0.75rem;
+}
+
+.package-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.package-media {
+    position: relative;
+    height: 7rem;
+    overflow: hidden;
+}
+
+.package-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.package-card:hover .package-media img {
+    transform: scale(1.05);
+}
+
+.package-badge {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    max-width: calc(100% - 0.8rem);
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(12, 74, 110, 0.9);
+    color: #fff;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.package-body {
+    padding: 0.65rem 0.65rem 0.4rem;
+    min-width: 0;
+}
+
+.package-dates {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.3rem;
+    margin-bottom: 0.3rem;
+    color: #0284C7;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.package-title {
+    margin-bottom: 0.3rem;
+    color: #0C4A6E;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.package-location {
+    display: none; /* detalhe mostrado a partir de telas maiores / no modal */
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+    color: #64748b;
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.package-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #475569;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.package-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.4rem 0.65rem 0.65rem;
+}
+
+.package-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 2.25rem; /* alvo de toque confortável */
+    padding: 0.5rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.package-btn-primary {
+    background: #00A8E8;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.package-btn-primary:hover {
+    background: #0284C7;
+}
+
+.package-btn-secondary {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+}
+
+.package-btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+/* ==========================================================================
+   Galeria "Belezas do Pará": 2 colunas no celular, 4 no desktop
+   ========================================================================== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.gallery-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.gallery-media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #e0f2fe; /* aparece enquanto a foto carrega */
+}
+
+.gallery-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.gallery-card:hover .gallery-media img {
+    transform: scale(1.06);
+}
+
+.gallery-caption {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.65rem;
+}
+
+.gallery-title {
+    color: #0C4A6E;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.gallery-desc {
+    color: #475569;
+    font-size: 0.7rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.gallery-credit {
+    margin-top: auto;
+    padding-top: 0.25rem;
+    color: #94a3b8;
+    font-size: 0.6rem;
+}
+
+.gallery-credit:hover {
+    color: #0284C7;
+    text-decoration: underline;
+}
+
+@media (min-width: 640px) {
+    .gallery-grid {
+        gap: 1.25rem;
+    }
+
+    .gallery-card {
+        border-radius: 1.25rem;
+    }
+
+    .gallery-caption {
+        padding: 1rem;
+    }
+
+    .gallery-title {
+        font-size: 1.05rem;
+    }
+
+    .gallery-desc {
+        font-size: 0.85rem;
+    }
+
+    .gallery-credit {
+        font-size: 0.7rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .gallery-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* Celulares muito estreitos (≤ 360px, ex.: 320px) */
+@media (max-width: 360px) {
+    .packages-grid {
+        gap: 0.5rem;
+    }
+
+    .package-media {
+        height: 6rem;
+    }
+
+    .package-title {
+        font-size: 0.75rem;
+    }
+
+    .package-btn {
+        font-size: 0.6rem;
+    }
+}
+
+/* Celulares maiores (≥ 390px) */
+@media (min-width: 390px) {
+    .package-media {
+        height: 8rem;
+    }
+
+    .package-title {
+        font-size: 0.875rem;
+    }
+
+    .package-desc,
+    .package-dates {
+        font-size: 0.72rem;
+    }
+
+    .package-btn {
+        font-size: 0.7rem;
+    }
+}
+
+/* Tablet em diante (≥ 640px): cards mais confortáveis, ainda em 2 colunas */
+@media (min-width: 640px) {
+    .packages-grid {
+        gap: 1.5rem;
+    }
+
+    .package-card {
+        border-radius: 1.5rem;
+    }
+
+    .package-media {
+        height: 13rem;
+    }
+
+    .package-badge {
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+    }
+
+    .package-body {
+        padding: 1.5rem 1.5rem 0.5rem;
+    }
+
+    .package-dates {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .package-title {
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .package-location {
+        display: flex;
+    }
+
+    .package-desc {
+        -webkit-line-clamp: 2;
+        font-size: 0.875rem;
+    }
+
+    .package-actions {
+        flex-direction: row;
+        padding: 0.5rem 1.5rem 1.5rem;
+    }
+
+    .package-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .package-btn-primary {
+        flex: 1;
+    }
+}
+
+/* Desktop (≥ 1024px): 3 colunas */
+@media (min-width: 1024px) {
+    .packages-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem;
+    }
+
+    .package-title {
+        font-size: 1.25rem;
+    }
+}

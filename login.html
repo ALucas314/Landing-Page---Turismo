@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | FielTour</title>
+    <meta name="robots" content="noindex">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                colors: {
+                    fiel: { dark: '#0b4a72', deeper: '#082f49', blue: '#0284c7', cyan: '#0ea5e9', light: '#e0f2fe' },
+                    whatsapp: { DEFAULT: '#25d366', dark: '#1ebe57' }
+                },
+                fontFamily: { display: ['Montserrat', 'sans-serif'], sans: ['Inter', 'sans-serif'] }
+            } }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <!-- Configuração pública gerada a partir do .env ("npm run config") -->
+    <script src="assets/js/env.js"></script>
+    <script src="assets/js/supabase-client.js"></script>
+
+    <style>
+        .login-bg {
+            background-image: linear-gradient(180deg, rgba(8,47,73,.78) 0%, rgba(8,47,73,.62) 50%, rgba(8,47,73,.85) 100%),
+                url('https://commons.wikimedia.org/wiki/Special:FilePath/Ilha_do_Amor,_%C3%81lter_do_Ch%C3%A3o.JPG?width=1920');
+            background-size: cover;
+            background-position: center;
+        }
+        .login-logo { height: 70px; width: auto; max-width: 100%; }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-800 selection:bg-fiel-cyan selection:text-white">
+
+    <main class="login-bg min-h-screen flex items-center justify-center px-4 py-10">
+        <div class="w-full max-w-md">
+
+            <!-- Voltar -->
+            <a href="index.html" class="inline-flex items-center gap-2 text-sky-100 hover:text-white text-sm font-semibold mb-5 transition-colors">
+            </a>
+
+            <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-9">
+
+                <!-- Logo -->
+                <div class="flex justify-center mb-6">
+                    <a href="index.html" aria-label="FielTour - Início">
+                        <img src="assets/img/Logo.png" alt="FielTour - Agência de Turismo" class="login-logo">
+                    </a>
+                </div>
+
+                <div class="text-center mb-7">
+                    <h1 class="font-display font-black text-2xl sm:text-3xl text-fiel-dark">administração</h1>
+                </div>
+
+                <!-- Aviso (erro / info) -->
+                <div id="login-alert" class="hidden mb-5 rounded-xl px-4 py-3 text-sm font-semibold" role="alert"></div>
+
+                <form id="login-form" novalidate class="space-y-5">
+
+                    <!-- E-mail -->
+                    <div>
+                        <label for="email" class="block text-sm font-bold text-slate-700 mb-1.5">E-mail</label>
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input id="email" name="email" type="email" autocomplete="email" placeholder="seu@email.com"
+                                   class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3.5 text-sm transition">
+                        </div>
+                        <p id="email-error" class="hidden text-red-600 text-xs mt-1.5"></p>
+                    </div>
+
+                    <!-- Senha -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-sm font-bold text-slate-700">Senha</label>
+                            <button type="button" id="forgot-btn" class="text-xs font-semibold text-fiel-cyan hover:text-fiel-blue transition-colors">Esqueci minha senha</button>
+                        </div>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha"
+                                   class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-12 py-3.5 text-sm transition">
+                            <button type="button" id="toggle-password" aria-label="Mostrar senha"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-fiel-cyan p-2 transition-colors">
+                                <i id="toggle-icon" class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <p id="password-error" class="hidden text-red-600 text-xs mt-1.5"></p>
+                    </div>
+
+                    <!-- Lembrar -->
+                    <label class="flex items-center gap-2.5 text-sm text-slate-600 cursor-pointer select-none">
+                        <input type="checkbox" id="remember" class="w-4 h-4 rounded border-slate-300 accent-sky-500">
+                        <span>Manter-me conectado</span>
+                    </label>
+
+                    <!-- Botão -->
+                    <button type="submit" id="submit-btn"
+                            class="w-full bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-base py-4 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                        <span id="submit-text">ENTRAR</span>
+                        <i id="submit-icon" class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <!-- Recuperar senha (Supabase) -->
+                <form id="forgot-form" novalidate class="hidden space-y-5">
+                    <div class="text-center">
+                        <h2 class="font-display font-black text-xl text-fiel-dark">Recuperar senha</h2>
+                        <p class="text-slate-500 text-sm mt-1">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+                    </div>
+                    <div>
+                        <label for="forgot-email" class="block text-sm font-bold text-slate-700 mb-1.5">E-mail</label>
+                        <div class="relative">
+                            <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input id="forgot-email" type="email" autocomplete="email" placeholder="seu@email.com"
+                                   class="w-full bg-slate-50 border border-slate-200 focus:border-fiel-cyan focus:ring-2 focus:ring-fiel-cyan/30 outline-none rounded-xl pl-11 pr-4 py-3.5 text-sm transition">
+                        </div>
+                        <p id="forgot-error" class="hidden text-red-600 text-xs mt-1.5"></p>
+                    </div>
+                    <button type="submit" id="forgot-submit" class="w-full bg-fiel-cyan hover:bg-fiel-blue text-white font-display font-bold text-base py-4 rounded-full shadow-lg transition-all flex items-center justify-center gap-2">
+                        <span id="forgot-text">ENVIAR LINK</span>
+                        <i id="forgot-icon" class="fa-regular fa-paper-plane"></i>
+                    </button>
+                    <button type="button" id="back-login" class="w-full text-sm font-semibold text-slate-500 hover:text-fiel-cyan transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar ao login
+                    </button>
+                </form>
+
+                <p class="text-center text-xs text-slate-400 mt-6">
+                </p>
+            </div>
+
+            <p class="text-center text-sky-100/80 text-xs mt-6">&copy; <span id="year"></span> FielTour &bull; Agência de Turismo &bull; Belém - PA</p>
+        </div>
+    </main>
+
+    <script>
+    (function () {
+        var form = document.getElementById('login-form');
+        var email = document.getElementById('email');
+        var pass = document.getElementById('password');
+        var emailErr = document.getElementById('email-error');
+        var passErr = document.getElementById('password-error');
+        var alertBox = document.getElementById('login-alert');
+        var btn = document.getElementById('submit-btn');
+        var btnText = document.getElementById('submit-text');
+        var btnIcon = document.getElementById('submit-icon');
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        /* ===== SUPABASE =====
+           As credenciais NÃO ficam neste arquivo: vêm do .env via
+           assets/js/env.js (somente URL + chave pública). */
+        var FT = window.FielTour || { configured: false, client: null, NOT_CONFIGURED_MSG: 'Configuração do Supabase não encontrada.' };
+        var sb = FT.client;
+        var NOT_CONFIGURED = FT.NOT_CONFIGURED_MSG;
+        var remember = document.getElementById('remember');
+
+        // Mensagens vindas do painel (sessão encerrada, acesso negado...)
+        var motivo = new URLSearchParams(window.location.search).get('motivo');
+        var MOTIVOS = {
+            negado: ['error', 'Acesso restrito aos administradores da FielTour.'],
+            expirado: ['info', 'Sua sessão expirou. Entre novamente.'],
+            saiu: ['info', 'Você saiu do painel com segurança.'],
+            erro: ['error', 'Não foi possível verificar seu acesso. Entre novamente.']
+        };
+        if (MOTIVOS[motivo]) showAlertSoon(MOTIVOS[motivo][0], MOTIVOS[motivo][1]);
+        function showAlertSoon(t, m) { setTimeout(function () { showAlert(t, m); }, 0); }
+
+        // Já está logado como admin? Vai direto para o painel.
+        if (sb && motivo !== 'negado') {
+            FT.checkAdmin().then(function (r) {
+                if (r.status === 'ok') window.location.replace('admin.html');
+                else if (r.status === 'negado') sb.auth.signOut();
+            }).catch(function () {});
+        }
+
+        // Mostrar / ocultar senha
+        var toggle = document.getElementById('toggle-password');
+        var toggleIcon = document.getElementById('toggle-icon');
+        toggle.addEventListener('click', function () {
+            var show = pass.type === 'password';
+            pass.type = show ? 'text' : 'password';
+            toggleIcon.className = show ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+            toggle.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+        });
+
+        function setError(input, el, msg) {
+            el.textContent = msg;
+            el.classList.toggle('hidden', !msg);
+            input.classList.toggle('border-red-400', !!msg);
+            input.classList.toggle('border-slate-200', !msg);
+        }
+
+        function showAlert(type, msg) {
+            alertBox.className = 'mb-5 rounded-xl px-4 py-3 text-sm font-semibold ' +
+                (type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-sky-50 text-sky-800 border border-sky-200');
+            alertBox.textContent = msg;
+        }
+
+
+        // ===== Recuperar senha =====
+        var forgotForm = document.getElementById('forgot-form');
+        var forgotEmail = document.getElementById('forgot-email');
+        var forgotErr = document.getElementById('forgot-error');
+        var forgotBtn = document.getElementById('forgot-submit');
+        var forgotText = document.getElementById('forgot-text');
+        var forgotIcon = document.getElementById('forgot-icon');
+
+        function showPanel(forgot) {
+            form.classList.toggle('hidden', forgot);
+            forgotForm.classList.toggle('hidden', !forgot);
+            alertBox.classList.add('hidden');
+            if (forgot) { forgotEmail.value = email.value; forgotEmail.focus(); }
+        }
+        document.getElementById('forgot-btn').addEventListener('click', function () { showPanel(true); });
+        document.getElementById('back-login').addEventListener('click', function () { showPanel(false); });
+
+        forgotForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            alertBox.classList.add('hidden');
+            var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.value.trim());
+            setError(forgotEmail, forgotErr, ok ? '' : 'Digite um e-mail válido.');
+            if (!ok) return;
+            if (!sb) { showAlert('error', NOT_CONFIGURED); return; }
+
+            forgotBtn.disabled = true; forgotText.textContent = 'ENVIANDO...'; forgotIcon.className = 'fa-solid fa-spinner fa-spin';
+            var redirect = new URL('redefinir-senha.html', window.location.href).href;
+            sb.auth.resetPasswordForEmail(forgotEmail.value.trim(), { redirectTo: redirect })
+                .then(function (r) {
+                    forgotBtn.disabled = false; forgotText.textContent = 'ENVIAR LINK'; forgotIcon.className = 'fa-regular fa-paper-plane';
+                    if (r.error) { showAlert('error', 'Não foi possível enviar o e-mail agora. Tente novamente em instantes.'); return; }
+                    showAlert('info', 'Se esse e-mail estiver cadastrado, você receberá um link para criar uma nova senha. Verifique também a caixa de spam.');
+                });
+        });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            alertBox.classList.add('hidden');
+
+            var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+            var okPass = pass.value.length >= 6;
+            setError(email, emailErr, okEmail ? '' : 'Digite um e-mail válido.');
+            setError(pass, passErr, okPass ? '' : 'A senha deve ter pelo menos 6 caracteres.');
+            if (!okEmail || !okPass) return;
+
+            // Estado de carregando
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btnText.textContent = 'ENTRANDO...';
+            btnIcon.className = 'fa-solid fa-spinner fa-spin';
+
+            function done() {
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                btnText.textContent = 'ENTRAR';
+                btnIcon.className = 'fa-solid fa-arrow-right-to-bracket';
+            }
+            if (!sb) { done(); showAlert('error', NOT_CONFIGURED); return; }
+
+            FT.setRemember(remember.checked);
+            sb.auth.signInWithPassword({ email: email.value.trim(), password: pass.value })
+                .then(function (r) {
+                    if (r.error) {
+                        done();
+                        var m = (r.error.message || '').toLowerCase();
+                        if (m.indexOf('email not confirmed') > -1) showAlert('error', 'E-mail ainda não confirmado no Supabase Auth.');
+                        else if (r.error.status === 429) showAlert('error', 'Muitas tentativas. Aguarde alguns minutos e tente novamente.');
+                        else showAlert('error', 'E-mail ou senha incorretos.');
+                        return;
+                    }
+                    // Autenticado: confere em public.perfis se é administrador
+                    return FT.checkAdmin().then(function (c) {
+                        if (c.status === 'ok') { btnText.textContent = 'ACESSO LIBERADO'; window.location.replace('admin.html'); return; }
+                        done();
+                        pass.value = '';
+                        return sb.auth.signOut().then(function () {
+                            showAlert('error', c.status === 'negado'
+                                ? 'Acesso restrito aos administradores da FielTour.'
+                                : 'Não foi possível verificar seu perfil. Tente novamente.');
+                        });
+                    });
+                })
+                .catch(function () { done(); showAlert('error', 'Não foi possível entrar agora. Verifique sua conexão e tente novamente.'); });
+        });
+    })();
+    </script>
+
+    <script>
+    /* Apara as margens transparentes da logo para ela aparecer maior */
+    (function(){
+      var img=document.querySelector('.login-logo'); if(!img) return;
+      function trim(){
+        try{
+          var w=img.naturalWidth,h=img.naturalHeight; if(!w||!h) return;
+          var c=document.createElement('canvas'); c.width=w; c.height=h;
+          var x=c.getContext('2d'); x.drawImage(img,0,0);
+          var d=x.getImageData(0,0,w,h).data, minX=w,minY=h,maxX=-1,maxY=-1;
+          for(var y=0;y<h;y++){for(var i=0;i<w;i++){
+            var k=(y*w+i)*4, a=d[k+3];
+            if(a>20 && !(d[k]>245&&d[k+1]>245&&d[k+2]>245)){ if(i<minX)minX=i; if(i>maxX)maxX=i; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+          }}
+          if(maxX<0) return;
+          var cw=maxX-minX+1, ch=maxY-minY+1, o=document.createElement('canvas');
+          o.width=cw; o.height=ch; o.getContext('2d').drawImage(c,minX,minY,cw,ch,0,0,cw,ch);
+          img.src=o.toDataURL('image/png');
+        }catch(e){}
+      }
+      if(img.complete) trim(); else img.addEventListener('load',trim,{once:true});
+    })();
+    </script>
+</body>
+</html>
